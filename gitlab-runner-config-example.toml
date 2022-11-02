@@ -1,0 +1,37 @@
+listen_address = "1.2.3.4:9252"
+concurrent = 32
+check_interval = 0
+
+[session_server]
+  session_timeout = 1800
+
+
+[[runners]]
+  name = "runner-nocache"
+  output_limit = 32768
+  request_concurrency = 32
+  url = "https:/example.com/"
+  id = 1
+  token = "token"
+  token_obtained_at = 2022-10-27T11:49:58Z
+  token_expires_at = 0001-01-01T00:00:00Z
+  executor = "docker"
+  pre_clone_script = "apk add openssh-client \n mkdir -p ~/.ssh \n echo -e 'Host *\n\tStrictHostKeyChecking no\n\n' > ~/.ssh/config \n chmod 600 ~/.ssh/config"
+  [runners.custom_build_dir]
+  [runners.cache]
+    [runners.cache.s3]
+    [runners.cache.gcs]
+    [runners.cache.azure]
+  [runners.docker]
+    tls_verify = false
+    image = "docker:20.10.18-dind"
+    dns = ["1.2.3.4", "5.6.7.8"]
+    privileged = true
+    disable_entrypoint_overwrite = false
+    oom_kill_disable = false
+    disable_cache = false
+    volumes = ["/cache"]
+    shm_size = 0
+    [[runners.docker.services]]
+      name = "docker:20.10.18-dind"
+      alias = "docker"
